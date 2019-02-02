@@ -33,7 +33,7 @@ void tree::read_point(const std::string file_name) {
 		for(int j = 0; j < m; ++j) {
 			in >> t;
 			double e = static_cast<double> (rand()) / static_cast<float>(RAND_MAX);
-			t += e;
+		//	t += e;
 			p.push_back(t);
 		}
 		points.push_back(p);
@@ -70,7 +70,7 @@ double tree::variance(const point &p) {
 	return var/p.size();
 }
 
-std::string tree::print(std::shared_ptr<node> &root) {
+std::string tree::print_tree(std::shared_ptr<node> &root) {
 	if(root == nullptr) return std::string();
 	std::ostringstream o;
 	std::queue<std::shared_ptr<node>> Q;

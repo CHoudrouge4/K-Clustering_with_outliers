@@ -37,7 +37,7 @@ class tree {
     *
     */
   	void read_point(const std::string file_name);
-    std::string print(std::shared_ptr<node> &root);
+    std::string print_tree(std::shared_ptr<node> &root);
   public:
     tree() {}
 

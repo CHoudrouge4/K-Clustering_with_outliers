@@ -13,14 +13,10 @@
 
 kd_tree::kd_tree(const std::string file_name) {
 	read_point(file_name);
-	for(size_t i = 0; i < points.size(); ++i) {
-		(root->pts).push_back(i);
-	}
+	for(size_t i = 0; i < points.size(); ++i) {	(root->pts).push_back(i); }
 	if(points.size() > 0) dimension = points[0].size();
 
-//	std::cout << "start constructing" << std::endl;
 	construct(root, 0);
-//	std::cout << "done constructing" << std::endl;
 }
 
 void kd_tree::construct(std::shared_ptr<node> &current, int index) {
@@ -45,65 +41,76 @@ void kd_tree::construct(std::shared_ptr<node> &current, int index) {
 	l->parent = current;
 	r->parent = current;
 	for(int i = 0; i < n; i++) {
-		if(points[current->pts[i]][index] <= med) {
-			l->pts.push_back(current->pts[i]);
-		} else {
-			r->pts.push_back(current->pts[i]);
-		}
+		if(points[current->pts[i]][index] <= med) l->pts.push_back(current->pts[i]);
+		else r->pts.push_back(current->pts[i]);
 	}
+
 	index = (index + 1) % dimension;
 	construct(current->left, index);
 	construct(current->right, index);
 }
 
-std::vector<int> kd_tree::search(std::vector<point> &query) {
-	std::vector<int> result(query.size());
+std::vector<vec_int> kd_tree::search(std::vector<point> &query, const double &r) {
+	std::vector<vec_int> result(query.size());
 	int i = 0;
 	for(auto&& q: query) {
 		double pmed = 0;
-		double R = std::numeric_limits<double>::max();
-		search(root, q, R, result[i], pmed);
+		R = std::numeric_limits<double>::max();
+		search(root, q, r * r, result[i], pmed);
 		i++;
 	}
 	return result;
 }
 
-// need revision and improvement
-void kd_tree::search(std::shared_ptr<node> &current, const point &q, double &R, int &res, double &pmed) {
+void kd_tree::search(std::shared_ptr<node> &current, const point &q, const double &rad, vec_int &res, double &pmed) {
 	if(current == nullptr) return;
 	if(current->left == nullptr && current->right == nullptr && current->pts.size() != 0) {
 		double d = dist(points[current->pts[0]], q);  //compure the distance between p and q where p is the only node in the leaf node
-		if(d < R) {
-			R = d;
-			res = current->pts[0];
+		std::cout << "I reached the leaf" << '\n';
+		if(d <= rad) {
+			res.push_back(current->pts[0]);
 			pmed = current->parent->median;
 		}
 	} else {
 		double med = current->median;
 		int index  = current->index;
 		bool exp;
-		if(q[index] <= med) {
-			exp = true;
-			search(current->left,  q, R, res, pmed);
-		} else {
-			exp = false;
-			search(current->right, q, R, res, pmed);
-		}
 
 		point plane = q;
 		plane[index] = med;
 		double r = dist(plane, q);
-		if(r < R) {
-				for(auto&& p: current->pts) {
-				if(exp && points[p][index] > med && dist(q, points[p]) <= R) {
-					search(current->right, q, R, res, pmed);
-					break;
-				}
-				if(!exp && points[p][index] <= med && dist(q, points[p]) <= R) {
-					search(current->left, q, R, res, pmed);
-					break;
+
+		if(q[index] <= pmed || r <= rad) {
+			exp = true;
+			search(current->left, q, rad, res, pmed);
+		} else {
+			exp = false;
+			search(current->right, q, rad, res, pmed);
+		}
+
+		if(r <= rad) {
+			std::cout << "nb of pts: "  << std::endl << current->pts.size() << std::endl;
+			for(size_t i = 0; i < current->pts.size(); ++i) {
+				int p = current->pts[i];
+				std::cout << "p: " << p << '\n';
+				if(dist(q, points[p]) <= rad) {
+					std::cout << "Intersection" << '\n';
+					if(exp || (points[p][index] >= med))  {
+						std::cout << "I went right!" << '\n';
+						search(current->right, q, rad, res, pmed);
+						break;
+					}
+					if(!exp || (points[p][index] <= med)) {
+						std::cout << "I went left!" << '\n';
+						search(current->left, q, rad, res, pmed);
+						break;
+					}
 				}
 			}
 		}
 	}
+}
+
+std::string kd_tree::print() {
+	return print_tree(root);
 }
