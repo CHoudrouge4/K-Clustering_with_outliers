@@ -33,7 +33,7 @@ void tree::read_point(const std::string file_name) {
 		for(int j = 0; j < m; ++j) {
 			in >> t;
 			double e = static_cast<double> (rand()) / static_cast<float>(RAND_MAX);
-		//	t += e;
+			t += e;
 			p.push_back(t);
 		}
 		points.push_back(p);

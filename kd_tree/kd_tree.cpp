@@ -15,12 +15,10 @@ kd_tree::kd_tree(const std::string file_name) {
 	read_point(file_name);
 	for(size_t i = 0; i < points.size(); ++i) {	(root->pts).push_back(i); }
 	if(points.size() > 0) dimension = points[0].size();
-
 	construct(root, 0);
 }
 
 void kd_tree::construct(std::shared_ptr<node> &current, int index) {
-
 	if(current == nullptr) return;
 	int n = (current->pts).size();
 	// if we have one point, then we are done
@@ -63,15 +61,17 @@ std::vector<vec_int> kd_tree::search(std::vector<point> &query, const double &r)
 }
 
 void kd_tree::search(std::shared_ptr<node> &current, const point &q, const double &rad, vec_int &res, double &pmed) {
+
 	if(current == nullptr) return;
 	if(current->left == nullptr && current->right == nullptr && current->pts.size() != 0) {
 		double d = dist(points[current->pts[0]], q);  //compure the distance between p and q where p is the only node in the leaf node
-		std::cout << "I reached the leaf" << '\n';
 		if(d <= rad) {
+			std::cout << "yes" << '\n';
 			res.push_back(current->pts[0]);
 			pmed = current->parent->median;
 		}
 	} else {
+
 		double med = current->median;
 		int index  = current->index;
 		bool exp;
@@ -80,7 +80,7 @@ void kd_tree::search(std::shared_ptr<node> &current, const point &q, const doubl
 		plane[index] = med;
 		double r = dist(plane, q);
 
-		if(q[index] <= pmed || r <= rad) {
+		if(q[index] <= pmed) {
 			exp = true;
 			search(current->left, q, rad, res, pmed);
 		} else {
@@ -88,26 +88,18 @@ void kd_tree::search(std::shared_ptr<node> &current, const point &q, const doubl
 			search(current->right, q, rad, res, pmed);
 		}
 
-		if(r <= rad) {
-			std::cout << "nb of pts: "  << std::endl << current->pts.size() << std::endl;
+
+		if(r <= rad)  {
 			for(size_t i = 0; i < current->pts.size(); ++i) {
 				int p = current->pts[i];
-				std::cout << "p: " << p << '\n';
 				if(dist(q, points[p]) <= rad) {
-					std::cout << "Intersection" << '\n';
-					if(exp || (points[p][index] >= med))  {
-						std::cout << "I went right!" << '\n';
-						search(current->right, q, rad, res, pmed);
-						break;
-					}
-					if(!exp || (points[p][index] <= med)) {
-						std::cout << "I went left!" << '\n';
-						search(current->left, q, rad, res, pmed);
-						break;
-					}
+					search(current->right, q, rad, res, pmed);
+					search(current->left, q, rad, res, pmed);
+					break;
 				}
 			}
 		}
+
 	}
 }
 

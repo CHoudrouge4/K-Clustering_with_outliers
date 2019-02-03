@@ -2,19 +2,17 @@ CC = g++
 CFLAGS = -g -Wall
 C = -c
 VERSION = -std=c++14
-OUTPUT  = client
-SOURCES = main.cpp kd_tree.cpp tree.cpp
+OUTPUT  = co.exe
+SOURCES = main.cpp FRS.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
-REMOVE  = client  *.o
+REMOVE  = co.exe *.o
 
 $(OUTPUT): $(OBJECTS)
 	$(CC) $(CFLAGS) $(VERSION) $(OBJECTS) -o $(OUTPUT)
-main.o: main.cpp tree.cpp node.h tree.h
+main.o: main.cpp FRS.cpp
 	$(CC) $(VERSION) $(C) $(CFLAGS) main.cpp
-tree.o: tree.cpp tree.h node.h
-	$(CC) $(VERSION) $(C) $(CFLAGS) tree.cpp
-kd_tree.o: kd_tree.cpp kd_tree.h node.h tree.h
-	$(CC) $(VERSION) $(C) $(CFLAGS) kd_tree.cpp
+FRS.o: FRS.cpp FRS.h
+	$(CC) $(VERSION) $(C) $(CFLAGS) FRS.cpp
 .PHONY: clean
 clean:
 	@rm -rf $(REMOVE)

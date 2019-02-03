@@ -20,6 +20,7 @@ std::ostream& operator<<(std::ostream& out, const std::vector<T>& v) {
 }
 
 struct node {
+	int id;
 	double r;
 	double median;
 	int index; // the index that we computed the median with respect to it.

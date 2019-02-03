@@ -14,10 +14,11 @@ friend std::ostream &operator<<(std::ostream &out, kd_tree &k) {
 }
 
 private:
+	int count = 0;
 	std::shared_ptr<node> root = std::make_shared<node>();
 //	std::shared_ptr<node> current = std::make_shared<node>();
 	double R;
-
+	std::vector<bool> visited;
 
 	kd_tree() {}
 
