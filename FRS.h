@@ -37,5 +37,6 @@ public:
 	vec_int querry_disk_r(const size_t q);
 	point get_point(const size_t) const;
 	vec_pts get_points(const vec_int & indices);
+	vec_pts get_points();
 	void new_raduis(const double&);
 };

@@ -10,6 +10,7 @@ FRS::FRS(std::string file_name, double r) {
 	std::cout << min_y << ' ' << max_y << '\n';
 	radius = r;
 	radius_2 = r * r;
+	build_2d_grid();
 }
 
 double FRS::distance_2(const int p, const int q) const {
@@ -68,9 +69,10 @@ void FRS::build_2d_grid() {
 vec_int FRS::querry_disk_r(const size_t q) {
 	int qi = get_i_index(q);
 	int qj = get_j_index(q);
+	std::cout << qi << ' ' << qj << '\n';
 	vec_int res;
-	for(int i = qi - 1; i < qi + 2; i++) {
-		for(int j = qj - 1; j < qj + 2; j++) {
+	for(int i = qi - 1; i <= qi + 2; i++) {
+		for(int j = qj - 1; j <= qj + 2; j++) {
 		//	if(distance_2())
 			std::pair<int, int> p = {i, j};
 			auto v = grid[p];
@@ -79,3 +81,5 @@ vec_int FRS::querry_disk_r(const size_t q) {
 	}
 	return res;
 }
+
+vec_pts FRS::get_points() { return points;}

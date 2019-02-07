@@ -5,6 +5,7 @@
 #include <sstream>
 #include <random>
 #include <chrono>
+#include <ctime>
 #include "FRS.h"
 
 typedef std::vector<double> point;
@@ -47,16 +48,40 @@ double distance2(point x, point y) {
 	return sum;
 }
 
-std::vector<int> naive(const std::vector<point> points, point &q, double r2) {
+std::vector<int> naive(const std::vector<point> points, const int q, double r2) {
 	std::vector<int> result;
-	for(size_t i = 0; i < points.size(); ++i) if(distance2(q, points[i]) <= r2) result.push_back(i);
+	for(size_t i = 0; i < points.size(); ++i) if(distance2(points[q], points[i]) <= r2) result.push_back(i);
 	return result;
 }
 
 int main() {
 
-	generate_data(100, 2);
-	FRS("data.txt", 4);
+	generate_data(100000, 2);
+	FRS f("data.txt", 4);
+	auto points = f.get_points();
 
+	clock_t begin = clock();
+	auto g_res = f.querry_disk_r(0);
+	clock_t end = clock();
+	double elapsed = double(end - begin) / CLOCKS_PER_SEC;
+	std::cout << "time " << elapsed << '\n';
+
+	begin = clock();
+	auto n_res = naive(points, 0,  4 * 4);
+	end = clock();
+	elapsed = double(end - begin) / CLOCKS_PER_SEC;
+	std::cout << "time " << elapsed << '\n';
+
+
+	std::sort(g_res.begin(), g_res.end());
+/*
+	for(size_t i = 0; i < g_res.size(); ++i) {
+		std::cout << g_res[i] << ' ';
+	} std::cout << '\n';
+
+	for(size_t i = 0; i < n_res.size(); ++i) {
+		std::cout << n_res[i] << ' ';
+	} std::cout << '\n';
+*/
 	return 0;
 }
