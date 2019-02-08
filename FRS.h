@@ -3,10 +3,18 @@
 #include <string>
 #include <limits>
 #include <map>
+#include <unordered_map>
+#include <set>
 
 typedef std::vector<double> point;
 typedef std::vector<int> vec_int;
 typedef std::vector<point> vec_pts;
+typedef std::vector<bool> vec_bool;
+
+template <typename T>
+struct cmp {
+	bool operator()(const T& lhs, const T& rhs) { return lhs > rhs; }
+};
 
 class FRS {
 private:
@@ -20,8 +28,15 @@ private:
 	double radius_2;
 
 	vec_pts points;
+	vec_bool covered;
+
 	std::map<std::pair<int, int>, vec_int> grid;
 
+	std::unordered_map<int, vec_int> G;
+	std::unordered_map<int, vec_int> E;
+
+	std::unordered_map<int, vec_int> point_to_disks;
+	std::set<std::pair<int, int>, cmp<std::pair<int, int>>> disks;
 
 	void read_points(const std::string file_name);
 	void build_2d_grid();
@@ -31,10 +46,17 @@ private:
 
 	double distance_2(const int p, const int q) const;
 
-public:
-	FRS(std::string file_name, double r);
 
-	vec_int querry_disk_r(const size_t q);
+public:
+	FRS(const std::string file_name, double r);
+	FRS() {};
+
+	void querry_disk_r(const size_t q, vec_int& res);
+	void construct_disks();
+	void update_disks(std::pair<int, int> &disk);
+
+	std::pair<int, int> get_heaviest_disk();
+
 	point get_point(const size_t) const;
 	vec_pts get_points(const vec_int & indices);
 	vec_pts get_points();

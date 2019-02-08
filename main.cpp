@@ -11,7 +11,7 @@
 typedef std::vector<double> point;
 
 
-#define RANGE 20
+#define RANGE 100
 const double epsilon = 0.5;
 
 static std::random_device rd;
@@ -56,12 +56,13 @@ std::vector<int> naive(const std::vector<point> points, const int q, double r2) 
 
 int main() {
 
-	generate_data(100000, 2);
+	generate_data(100, 2);
 	FRS f("data.txt", 4);
 	auto points = f.get_points();
 
 	clock_t begin = clock();
-	auto g_res = f.querry_disk_r(0);
+	vec_int g_res;
+	f.querry_disk_r(0, g_res);
 	clock_t end = clock();
 	double elapsed = double(end - begin) / CLOCKS_PER_SEC;
 	std::cout << "time " << elapsed << '\n';
@@ -74,7 +75,7 @@ int main() {
 
 
 	std::sort(g_res.begin(), g_res.end());
-/*
+
 	for(size_t i = 0; i < g_res.size(); ++i) {
 		std::cout << g_res[i] << ' ';
 	} std::cout << '\n';
@@ -82,6 +83,6 @@ int main() {
 	for(size_t i = 0; i < n_res.size(); ++i) {
 		std::cout << n_res[i] << ' ';
 	} std::cout << '\n';
-*/
+
 	return 0;
 }

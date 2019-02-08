@@ -4,13 +4,14 @@
 #include <algorithm>
 #include <cmath>
 
-FRS::FRS(std::string file_name, double r) {
+FRS::FRS(const std::string file_name, double r) {
 	read_points(file_name);
 	std::cout << min_x << ' ' << max_x << '\n';
 	std::cout << min_y << ' ' << max_y << '\n';
 	radius = r;
 	radius_2 = r * r;
 	build_2d_grid();
+	covered = vec_bool(points.size());
 }
 
 double FRS::distance_2(const int p, const int q) const {
@@ -66,20 +67,51 @@ void FRS::build_2d_grid() {
 	}
 }
 
-vec_int FRS::querry_disk_r(const size_t q) {
+void FRS::querry_disk_r(const size_t q, vec_int& res) {
 	int qi = get_i_index(q);
 	int qj = get_j_index(q);
 	std::cout << qi << ' ' << qj << '\n';
-	vec_int res;
-	for(int i = qi - 1; i <= qi + 2; i++) {
-		for(int j = qj - 1; j <= qj + 2; j++) {
+	for(int i = qi - 3; i <= qi + 3; i++) {
+		for(int j = qj - 3; j <= qj + 3; j++) {
 		//	if(distance_2())
 			std::pair<int, int> p = {i, j};
 			auto v = grid[p];
-			res.insert(res.end(), v.begin(), v.end());
+			for(size_t l = 0; l < v.size(); ++l) {
+				if(std::abs(qi - i) <= 1 && std::abs(qj - j) <= 1) {
+					res.push_back(v[l]);
+				} else {
+					E[q].push_back(v[l]);
+				}
+				point_to_disks[v[l]].push_back(q);
+			}
+			//	res.insert(res.end(), v.begin(), v.end());
 		}
 	}
-	return res;
+}
+
+void FRS::construct_disks() {
+	for(size_t i = 0; i < points.size(); ++i) {
+		querry_disk_r(i, G[i]);
+		disks.insert({G[i].size(), i});
+	}
+}
+
+void FRS::update_disks(std::pair<int, int> & disk) {
+	int size = disk.first;
+	int id  = disk.second;
+
+	disks.erase(disk);
+	for(size_t i = 0; i < G[id].size(); ++i) {
+		for(size_t j = 0; j < point_to_disks[G[id][i]].size(); ++j) {
+		//	disks.find
+		}
+	}
+
+
+}
+
+std::pair<int, int> FRS::get_heaviest_disk() {
+	return  *disks.begin();
 }
 
 vec_pts FRS::get_points() { return points;}
