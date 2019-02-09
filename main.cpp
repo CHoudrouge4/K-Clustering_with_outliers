@@ -56,7 +56,7 @@ std::vector<int> naive(const std::vector<point> points, const int q, double r2) 
 
 int main() {
 
-	generate_data(100, 2);
+	generate_data(10000, 2);
 	FRS f("data.txt", 4);
 	auto points = f.get_points();
 

@@ -18,24 +18,23 @@ struct cmp {
 
 class FRS {
 private:
+	int covered = 0;
 
 	double min_x = std::numeric_limits<double>::max();
 	double max_x = std::numeric_limits<double>::min();
 	double min_y = min_x;
 	double max_y = max_x;
-
 	double radius;
 	double radius_2;
 
 	vec_pts points;
-	vec_bool covered;
+	vec_int sizes;
 
 	std::map<std::pair<int, int>, vec_int> grid;
 
-	std::unordered_map<int, vec_int> G;
-	std::unordered_map<int, vec_int> E;
-
-	std::unordered_map<int, vec_int> point_to_disks;
+	std::vector<vec_int> G;
+	std::vector<vec_int> E;
+	std::vector<vec_int> point_to_disks;
 	std::set<std::pair<int, int>, cmp<std::pair<int, int>>> disks;
 
 	void read_points(const std::string file_name);
@@ -46,7 +45,6 @@ private:
 
 	double distance_2(const int p, const int q) const;
 
-
 public:
 	FRS(const std::string file_name, double r);
 	FRS() {};
@@ -56,9 +54,9 @@ public:
 	void update_disks(std::pair<int, int> &disk);
 
 	std::pair<int, int> get_heaviest_disk();
-
 	point get_point(const size_t) const;
 	vec_pts get_points(const vec_int & indices);
 	vec_pts get_points();
 	void new_raduis(const double&);
+	
 };
