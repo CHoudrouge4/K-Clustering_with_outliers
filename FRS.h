@@ -44,7 +44,9 @@ private:
 	int get_j_index(const size_t p) const;
 
 	double distance_2(const int p, const int q) const;
+	void mark_corresponding_disk(int p);
 
+	void init();
 public:
 	FRS(const std::string file_name, double r);
 	FRS() {};
@@ -55,8 +57,9 @@ public:
 
 	std::pair<int, int> get_heaviest_disk();
 	point get_point(const size_t) const;
+	void new_raduis(const double); // TODO : implement it
+
 	vec_pts get_points(const vec_int & indices);
 	vec_pts get_points();
-	void new_raduis(const double&);
-	
+	int get_covered();
 };

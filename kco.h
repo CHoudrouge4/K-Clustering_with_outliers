@@ -1,20 +1,17 @@
 #pragma once
 #include "FRS.h"
-#include <unordered_map>
 
 class KCO {
 
 public:
-	KCO(const std::string file_name, const int num_clusters);
+	KCO(const std::string file_name, const int num_clusters, const double alpha);
+	bool cover();
 	void run();
 
 private:
 	FRS searcher;
 	int k;
 	double r = 100;
-
-
-
-	std::unordered_map<int, vec_int> mp;
-
+	int p;
+	std::vector<vec_int> mp;
 };

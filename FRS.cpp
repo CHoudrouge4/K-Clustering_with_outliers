@@ -5,18 +5,21 @@
 #include <cmath>
 #include <cassert>
 
+void FRS::init() {
+	radius_2 = radius * radius;
+	build_2d_grid();
+	G = std::vector<vec_int>(points.size());
+	E = std::vector<vec_int>(points.size());
+	point_to_disks = std::vector<vec_int>(points.size());
+	sizes = std::vector<int>(points.size());
+}
+
 FRS::FRS(const std::string file_name, double r) {
 	read_points(file_name);
 	std::cout << min_x << ' ' << max_x << '\n';
 	std::cout << min_y << ' ' << max_y << '\n';
 	radius = r;
-	radius_2 = r * r;
-	build_2d_grid();
-	//covered = vec_bool(points.size());
-	G = std::vector<vec_int>(points.size());
-	E = std::vector<vec_int>(points.size());
-	point_to_disks = std::vector<vec_int>(points.size());
-	sizes = std::vector<int>(points.size());
+	init();
 }
 
 double FRS::distance_2(const int p, const int q) const {
@@ -65,7 +68,6 @@ int FRS::get_j_index(const size_t p) const {
 }
 
 void FRS::build_2d_grid() {
-//	get_grid_dimension();
 	for(size_t i = 0; i < points.size(); ++i) {
 		std::pair<int, int> p = {get_i_index(i), get_j_index(i)};
 		grid[p].push_back(i);
@@ -75,21 +77,16 @@ void FRS::build_2d_grid() {
 void FRS::querry_disk_r(const size_t q, vec_int& res) {
 	int qi = get_i_index(q);
 	int qj = get_j_index(q);
-	std::cout << qi << ' ' << qj << '\n';
 	for(int i = qi - 3; i <= qi + 3; i++) {
 		for(int j = qj - 3; j <= qj + 3; j++) {
 		//	if(distance_2())
 			std::pair<int, int> p = {i, j};
 			auto v = grid[p];
 			for(size_t l = 0; l < v.size(); ++l) {
-				if(std::abs(qi - i) <= 1 && std::abs(qj - j) <= 1) {
-					res.push_back(v[l]);
-				} else {
-					E[q].push_back(v[l]);
-				}
+				if(std::abs(qi - i) <= 1 && std::abs(qj - j) <= 1) res.push_back(v[l]);
+			  else  {	E[q].push_back(v[l]);}
 				point_to_disks[v[l]].push_back(q);
 			}
-			//	res.insert(res.end(), v.begin(), v.end());
 		}
 	}
 	sizes[q] = G[q].size();
@@ -102,22 +99,36 @@ void FRS::construct_disks() {
 	}
 }
 
+void FRS::mark_corresponding_disk(int p) {
+	for(size_t j = 0; j < point_to_disks[p].size(); ++j) {
+		int d_id = point_to_disks[p][j];
+		disks.erase(std::make_pair(sizes[d_id], d_id));
+		sizes[d_id]--;
+		assert(sizes[d_id] >= 0);
+		disks.insert({sizes[d_id], d_id});
+	}
+}
+
 void FRS::update_disks(std::pair<int, int> & disk) {
-	coverd += disk.first;
+	covered += disk.first;
 	int id  = disk.second;
 	sizes[id] = 0;
 	disks.erase(disk);
 	for(size_t i = 0; i < G[id].size(); ++i) {
 		int p = G[id][i];
-		for(size_t j = 0; j < point_to_disks[p].size(); ++j) {
-			int d_id = point_to_disks[p][j];
-			disks.erase(std::make_pair(sizes[d_id], d_id));
-			sizes[d_id]--;
-			assert(sizes[d_id] >= 0);
-			disks.insert({sizes[d_id], d_id});
-		}
+		int pe = E[id][i];
+		mark_corresponding_disk(p);
+		mark_corresponding_disk(pe);
 	}
+}
+
+void FRS::new_raduis(const double r) {
+	radius = r;
+	grid.clear();
+	init();
+	construct_disks();
 }
 
 std::pair<int, int> FRS::get_heaviest_disk() { return  *disks.begin(); }
 vec_pts FRS::get_points() { return points;}
+int FRS::get_covered() { return covered; }
