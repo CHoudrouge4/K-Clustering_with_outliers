@@ -7,7 +7,6 @@ public:
 	KCO(const std::string file_name, const int num_clusters, const double alpha);
 	bool cover();
 	void run();
-
 private:
 	FRS searcher;
 	int k;

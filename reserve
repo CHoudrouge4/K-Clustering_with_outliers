@@ -1,0 +1,7 @@
+
+int FRS::get_grid_dimension() const {
+	double max_dis_x = std::abs(max_x - min_x);
+	double max_dis_y = std::abs(max_y - min_y);
+	double dim = std::max(max_dis_x, max_dis_y);
+	return std::ceil(dim)/radius;
+}

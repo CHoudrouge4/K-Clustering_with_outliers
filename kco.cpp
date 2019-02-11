@@ -3,7 +3,6 @@
 KCO::KCO(const std::string file_name, const int num_clusters, const double alpha) {
 	FRS searcher = FRS(file_name, r);
 	k = num_clusters;
-
 	p = std::ceil(1 - alpha) * searcher.get_points().size();
 }
 

@@ -7,6 +7,8 @@
 #include <chrono>
 #include <ctime>
 #include "FRS.h"
+#define x(i) 2 * i
+#define y(i) 2 * i + 1
 
 typedef std::vector<double> point;
 
@@ -42,47 +44,53 @@ void generate_data(const int size, const int dim) {
 	out.close();
 }
 
-double distance2(point x, point y) {
-	double sum = 0.0;
-	for(size_t j = 0; j < x.size(); ++j) sum += (x[j] - y[j] ) * (x[j] - y[j]);
-	return sum;
+double distance2(double x1, double y1, double x2, double y2) {
+	double dx = x1 - x2;
+	double dy = y1 - y2;
+	return dx * dx + dy * dy;
 }
 
-std::vector<int> naive(const std::vector<point> points, const int q, double r2) {
+void naive(const point points, const int q, double r2) {
 	std::vector<int> result;
-	for(size_t i = 0; i < points.size(); ++i) if(distance2(points[q], points[i]) <= r2) result.push_back(i);
-	return result;
+	for(size_t i = 0; i < points.size()/2; ++i) if(distance2(points[x(q)], points[y(q)], points[x(i)], points[y(i)]) <= r2) result.push_back(i);
+	//return result;
 }
 
 int main() {
 
-	generate_data(10000, 2);
+	generate_data(1000000, 2);
+	clock_t begin = clock();
 	FRS f("data.txt", 4);
 	auto points = f.get_points();
-
-	clock_t begin = clock();
-	vec_int g_res;
-	f.querry_disk_r(0, g_res);
 	clock_t end = clock();
 	double elapsed = double(end - begin) / CLOCKS_PER_SEC;
-	std::cout << "time " << elapsed << '\n';
+	std::cout << "pre time " << elapsed << '\n';
 
+	std::cout << "start" << '\n';
 	begin = clock();
-	auto n_res = naive(points, 0,  4 * 4);
+	f.construct_disks();
 	end = clock();
 	elapsed = double(end - begin) / CLOCKS_PER_SEC;
 	std::cout << "time " << elapsed << '\n';
 
+	// begin = clock();
+	// for(int i = 0; i < points.size()/2 ; ++i) {
+	// 	naive(points, i,  4 * 4);
+	// }
+	// end = clock();
+	// elapsed = double(end - begin) / CLOCKS_PER_SEC;
+	// std::cout << "time " << elapsed << '\n';
 
-	std::sort(g_res.begin(), g_res.end());
-
-	for(size_t i = 0; i < g_res.size(); ++i) {
-		std::cout << g_res[i] << ' ';
-	} std::cout << '\n';
-
-	for(size_t i = 0; i < n_res.size(); ++i) {
-		std::cout << n_res[i] << ' ';
-	} std::cout << '\n';
+	//
+	// std::sort(g_res.begin(), g_res.end());
+	//
+	// for(size_t i = 0; i < g_res.size(); ++i) {
+	// 	std::cout << g_res[i] << ' ';
+	// } std::cout << '\n';
+	//
+	// for(size_t i = 0; i < n_res.size(); ++i) {
+	// 	std::cout << n_res[i] << ' ';
+	// } std::cout << '\n';
 
 	return 0;
 }
