@@ -12,22 +12,20 @@ KCO::KCO(const std::string file_name, const int num_clusters, const double alpha
 bool KCO::cover() {
 	  // O(n), O(n log n)
 	for(int i = 0; i < k; ++i) {
-		std::cout << "data size " <<  searcher.data_size() << '\n';
 		auto G_i = searcher.get_heaviest_disk(); //gi  O(log n)
 		// mark Ei				   O(|Ei|)
 		// updates all the disk    O()
 		//	clussters[i].push_back(g_i);
 		searcher.update_disks(G_i);
 	}
-
-	if(searcher.get_covered() == p) return true;
+	if(searcher.get_covered() >= p) return true;
 	return false;
 }
 
 void KCO::run() {
 	//double lower = 1;
 	//double upper = searcher.lower_bound();
-	//searcher.construct_disks();
+	searcher.construct_disks();
 	cover();
 	//searcher.new_raduis(r);
 }

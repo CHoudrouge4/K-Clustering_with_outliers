@@ -25,7 +25,6 @@ private:
 	std::set<std::pair<int, int>, cmp<std::pair<int, int>>> disks;
 	std::unordered_map<std::pair<int, int>, vec_int, pairhash> cell_to_disk;
 
-
 	double distance_2(const int p, const int q) const;
 	void mark_corresponding_disk(std::pair<int, int> &p);
 	void init();
@@ -34,7 +33,7 @@ public:
 	FRS() {};
 	//void querry_disk_r(const size_t q, vec_int& res);
 	void construct_disks();
-	void update_disks(std::pair<int, int> &disk);
+	void update_disks(std::pair<int, int> disk);
 	std::pair<int, int> get_heaviest_disk();
 	void new_raduis(const double);
 	int get_covered();

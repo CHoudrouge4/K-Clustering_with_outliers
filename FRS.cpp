@@ -9,28 +9,20 @@
 
 FRS::FRS(const std::string file_name, const double r) : grid(file_name, r) {
 	std::cout << d_size << '\n';
-	std::cout << "init " << number_points << std::endl;
-	this->number_points = number_points;
 	G = std::vector<vec_pair>(number_points);
 	E = std::vector<vec_pair>(number_points);
 	point_to_disks = std::vector<vec_int>(number_points);
 	disks_sizes = std::vector<int>(number_points);
-	std::cout << disks_sizes.size() << '\n';
-	std::cout << "G sizes " << G.size() << '\n';
 }
 
 void FRS::init() {
 	//d_size = new int(sizeof(int));
-//	d_size = number_points;
-	std::cout << d_size << '\n';
-	std::cout << "init " << number_points << std::endl;
+	//d_size = number_points;
 	this->number_points = number_points;
 	G = std::vector<vec_pair>(number_points);
 	E = std::vector<vec_pair>(number_points);
 	point_to_disks = std::vector<vec_int>(number_points);
 	disks_sizes = std::vector<int>(number_points);
-	std::cout << disks_sizes.size() << '\n';
-	std::cout << "G sizes " << G.size() << '\n';
 }
 
 double FRS::distance_2(const int p, const int q) const {
@@ -68,22 +60,23 @@ void FRS::mark_corresponding_disk(std::pair<int, int> &p) {
 	 	int d_id = cell_to_disk[p][j];
 		disks.erase(std::make_pair(disks_sizes[d_id], d_id));
 		disks_sizes[d_id] -= mp[p].size();
-		assert(disks_sizes[d_id] >= 0);
-		disks.insert({disks_sizes[d_id], d_id});
+		//assert(disks_sizes[d_id] >= 0);
+		if(disks_sizes[d_id] >= 0)
+			disks.insert({disks_sizes[d_id], d_id});
 	}
 }
 
-void FRS::update_disks(std::pair<int, int>  &disk) {
+void FRS::update_disks(std::pair<int, int>  disk) {
 	covered += disk.first;
 	int id  = disk.second;
 	//std::cout << G.size() << std::endl;
-	 disks_sizes[id] = 0;
-	 disks.erase(disk);
-	 for(size_t i = 0; i < G[id].size(); ++i) {
-		 auto p = G[id][i];
-		 auto pe = E[id][i];
-		 mark_corresponding_disk(p);
-		 mark_corresponding_disk(pe);
+	disks_sizes[id] = 0;
+	disks.erase(disk);
+	for(size_t i = 0; i < G[id].size(); ++i) {
+		auto p = G[id][i];
+		auto pe = E[id][i];
+		mark_corresponding_disk(p);
+		mark_corresponding_disk(pe);
 	}
 }
 

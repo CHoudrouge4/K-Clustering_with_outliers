@@ -13,7 +13,6 @@
 
 typedef std::vector<double> point;
 
-
 #define RANGE 100
 const double epsilon = 0.5;
 
@@ -74,18 +73,16 @@ void test_frs() {
 	std::cout << "time " << elapsed << '\n';
 }
 
-
 int main() {
 
-	KCO k("data.txt", 10, 0.5);
-
+	std::string file_name = "./dataset/twitter_1000000.txt";
 	clock_t begin = clock();
+	KCO k(file_name, 10, 1);
+
 	k.run();
 	clock_t end = clock();
 	double elapsed = double(end - begin) / CLOCKS_PER_SEC;
 	std::cout << "pre time " << elapsed << '\n';
-
-
 
 	// begin = clock();
 	// for(int i = 0; i < points.size()/2 ; ++i) {
@@ -94,7 +91,6 @@ int main() {
 	// end = clock();
 	// elapsed = double(end - begin) / CLOCKS_PER_SEC;
 	// std::cout << "time " << elapsed << '\n';
-
 	//
 	// std::sort(g_res.begin(), g_res.end());
 	//

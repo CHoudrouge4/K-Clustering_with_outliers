@@ -39,14 +39,16 @@ void grid::reset(const double r) {
 void grid::read_points(const std::string file_name) {
 	std::ifstream in(file_name);
   dimension = 2;
-  int n; int m;
-	in >> n; in >> m;
-  number_points = n;
-  points = point(n * dimension);
-	for(int i = 0; i < n; ++i)
+  //int n; int m;
+	//in >> n; in >> m;
+  number_points = 1000000;
+  points = point(number_points * dimension);
+  int time;
+	for(int i = 0; i < number_points; ++i) {
+    in >> time;
 		for(int j = 0; j < dimension; ++j) {
 			in >> points[i];
-			if(j == 0) {
+      if(j == 0) {
 				min_x = std::min(min_x, points[i]);
 				max_x = std::max(max_x, points[i]);
 			}
@@ -55,5 +57,6 @@ void grid::read_points(const std::string file_name) {
 				max_y = std::max(max_y, points[i]);
 			}
 		}
+  }
 	in.close();
 }

@@ -18,7 +18,7 @@ public:
   }
 };
 
-class grid {
+struct grid {
 public:
   std::unordered_map<std::pair<int, int>, vec_int, pairhash> mp;
   double min_x = std::numeric_limits<double>::max();
@@ -28,6 +28,7 @@ public:
   double radius;
   double radius_2;
   int dimension;
+  int number_points;
 
   std::vector<double> points;
 
@@ -36,8 +37,6 @@ public:
   int get_i_index(const size_t p) const;
   int get_j_index(const size_t p) const;
 
-
-  int number_points;
   grid(){};
   grid(const std::string file_name, const double r);
   void reset(const double r);
