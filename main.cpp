@@ -7,6 +7,7 @@
 #include <chrono>
 #include <ctime>
 #include "FRS.h"
+#include "kco.h"
 #define x(i) 2 * i
 #define y(i) 2 * i + 1
 
@@ -56,8 +57,7 @@ void naive(const point points, const int q, double r2) {
 	//return result;
 }
 
-int main() {
-
+void test_frs() {
 	generate_data(1000000, 2);
 	clock_t begin = clock();
 	FRS f("data.txt", 4);
@@ -72,6 +72,20 @@ int main() {
 	end = clock();
 	elapsed = double(end - begin) / CLOCKS_PER_SEC;
 	std::cout << "time " << elapsed << '\n';
+}
+
+
+int main() {
+
+	KCO k("data.txt", 10, 0.5);
+
+	clock_t begin = clock();
+	k.run();
+	clock_t end = clock();
+	double elapsed = double(end - begin) / CLOCKS_PER_SEC;
+	std::cout << "pre time " << elapsed << '\n';
+
+
 
 	// begin = clock();
 	// for(int i = 0; i < points.size()/2 ; ++i) {
@@ -91,6 +105,5 @@ int main() {
 	// for(size_t i = 0; i < n_res.size(); ++i) {
 	// 	std::cout << n_res[i] << ' ';
 	// } std::cout << '\n';
-
 	return 0;
 }

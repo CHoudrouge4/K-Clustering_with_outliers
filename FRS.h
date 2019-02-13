@@ -14,6 +14,7 @@ struct cmp {
 
 class FRS : public grid {
 private:
+	int & d_size = number_points;
 	int covered = 0;
 	double radius;
 	double radius_2;
@@ -22,9 +23,11 @@ private:
 	std::vector<vec_pair> E;
 	std::vector<vec_int> point_to_disks;
 	std::set<std::pair<int, int>, cmp<std::pair<int, int>>> disks;
+	std::unordered_map<std::pair<int, int>, vec_int, pairhash> cell_to_disk;
+
 
 	double distance_2(const int p, const int q) const;
-	void mark_corresponding_disk(int p);
+	void mark_corresponding_disk(std::pair<int, int> &p);
 	void init();
 public:
 	FRS(const std::string file_name, const double r);
@@ -35,5 +38,7 @@ public:
 	std::pair<int, int> get_heaviest_disk();
 	void new_raduis(const double);
 	int get_covered();
+	double lower_bound();
 	const std::vector<double>& get_points();
+	const int& data_size();
 };

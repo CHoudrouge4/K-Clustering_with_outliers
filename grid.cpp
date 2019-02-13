@@ -5,9 +5,7 @@
 #define x(i) 2 * i
 #define y(i) 2 * i + 1
 
-grid::grid(const std::string file_name, const double r) {
-  radius = r;
-  radius_2  = r * r;
+grid::grid(const std::string file_name, const double r) : radius(r), radius_2(r * r) {
   read_points(file_name);
   build();
 }
@@ -29,9 +27,7 @@ void grid::build() {
 	}
 }
 
-const vec_int& grid::get_cell_points(const size_t i, const size_t j) {
-  return mp[{i, j}];
-}
+const vec_int& grid::get_cell_points(const size_t i, const size_t j) { return mp[{i, j}]; }
 
 void grid::reset(const double r) {
   radius = r;
@@ -45,7 +41,7 @@ void grid::read_points(const std::string file_name) {
   dimension = 2;
   int n; int m;
 	in >> n; in >> m;
-  number_points = n/2;
+  number_points = n;
   points = point(n * dimension);
 	for(int i = 0; i < n; ++i)
 		for(int j = 0; j < dimension; ++j) {

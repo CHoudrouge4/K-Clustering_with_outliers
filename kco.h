@@ -12,5 +12,5 @@ private:
 	int k;
 	double r = 100;
 	int p;
-	std::vector<vec_int> mp;
+	std::vector<vec_int> clussters;
 };
