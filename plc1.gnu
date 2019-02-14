@@ -29,5 +29,4 @@ set grid back ls 12
 
 set xrange [-20:20]
 set yrange [-20:20]
-
-plot('c1.txt') with points palette
+plot 'c1.txt' w p ls 1

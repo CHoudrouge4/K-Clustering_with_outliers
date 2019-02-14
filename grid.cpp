@@ -44,18 +44,18 @@ void grid::read_points(const std::string file_name) {
   number_points = 1000000;
   points = point(number_points * dimension);
   int time;
-	for(int i = 0; i < number_points; ++i) {
-    in >> time;
-		for(int j = 0; j < dimension; ++j) {
-			in >> points[i];
-      if(j == 0) {
-				min_x = std::min(min_x, points[i]);
-				max_x = std::max(max_x, points[i]);
-			}
-			if(j == 1) {
-				min_y = std::min(min_y, points[i]);
-				max_y = std::max(max_y, points[i]);
-			}
+	for(int i = 0; i < dimension * number_points; ++i) {
+  //  in >> time;
+    if(i % 2 == 0) in >> time;
+    in >> points[i];
+
+    if(i % 2 == 0) {
+			min_x = std::min(min_x, points[i]);
+			max_x = std::max(max_x, points[i]);
+		}
+		if(i % 2 == 1) {
+			min_y = std::min(min_y, points[i]);
+			max_y = std::max(max_y, points[i]);
 		}
   }
 	in.close();

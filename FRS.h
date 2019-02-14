@@ -30,7 +30,6 @@ private:
 	void init();
 public:
 	FRS(const std::string file_name, const double r);
-	FRS() {};
 	//void querry_disk_r(const size_t q, vec_int& res);
 	void construct_disks();
 	void update_disks(std::pair<int, int> disk);
@@ -40,4 +39,5 @@ public:
 	double lower_bound();
 	const std::vector<double>& get_points();
 	const int& data_size();
+	vec_pts get_g_points(const int id);
 };

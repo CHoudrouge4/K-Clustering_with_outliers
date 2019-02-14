@@ -26,6 +26,23 @@ point generate_point(const int dim) {
 	return p;
 }
 
+void generate_clusstered_points(int size, int dim) {
+	std::normal_distribution<> d1(5, 3);
+	std::normal_distribution<> d2(-10, 3);
+	std::normal_distribution<> d3(-4, 3);
+	std::ofstream out("clusstered_data.txt");
+	//out << size << ' ' << dim << '\n';
+	for(int i = 0; i < size; i++) {
+		if(i % 3 == 0)
+			out << d1(gen) << ' ' << d1(gen) << '\n';
+		if(i % 3 == 1)
+			out << d2(gen) << ' ' << d2(gen) << '\n';
+		if(i % 3 == 2)
+			out << d3(gen) << ' ' << d3(gen) << '\n';
+	}
+	out.close();
+}
+
 std::string point_to_string(const point p) {
 	std::ostringstream o;
 	for(size_t i = 0; i < p.size() - 1; ++i)
@@ -75,14 +92,17 @@ void test_frs() {
 
 int main() {
 
-	std::string file_name = "./dataset/twitter_1000000.txt";
-	clock_t begin = clock();
-	KCO k(file_name, 10, 1);
+	 //generate_clusstered_points(20, 2);
 
-	k.run();
-	clock_t end = clock();
-	double elapsed = double(end - begin) / CLOCKS_PER_SEC;
-	std::cout << "pre time " << elapsed << '\n';
+	 std::string file_name = "./dataset/twitter_1000000.txt";
+	 clock_t begin = clock();
+	 KCO k(file_name, 3, 1);
+	 k.run();
+	 clock_t end = clock();
+	 double elapsed = double(end - begin) / CLOCKS_PER_SEC;
+	 std::cout << "pre time " << elapsed << '\n';
+
+	 //k.print_clusters();
 
 	// begin = clock();
 	// for(int i = 0; i < points.size()/2 ; ++i) {
