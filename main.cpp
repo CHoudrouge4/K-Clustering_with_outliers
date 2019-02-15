@@ -19,6 +19,9 @@ const double epsilon = 0.5;
 static std::random_device rd;
 static std::mt19937 gen(rd());
 
+/**
+* generate a point of given dimension
+*/
 point generate_point(const int dim) {
 	static std::uniform_int_distribution<> dis(-RANGE, RANGE);
 	point p(dim);
@@ -26,6 +29,9 @@ point generate_point(const int dim) {
 	return p;
 }
 
+/**
+* Generate clusstered_data
+*/
 void generate_clusstered_points(int size, int dim) {
 	std::normal_distribution<> d1(5, 3);
 	std::normal_distribution<> d2(-10, 3);
@@ -43,7 +49,10 @@ void generate_clusstered_points(int size, int dim) {
 	out.close();
 }
 
-std::string point_to_string(const point p) {
+/**
+* return a string representation of a point
+*/
+std::string point_to_string(const point &p) {
 	std::ostringstream o;
 	for(size_t i = 0; i < p.size() - 1; ++i)
 		o << p[i] << ' ';
@@ -51,6 +60,9 @@ std::string point_to_string(const point p) {
 	return o.str();
 }
 
+/**
+* Generate data uniformally at random
+*/
 void generate_data(const int size, const int dim) {
 	std::ofstream out("data.txt");
 	out << size << ' ' << dim << '\n';
@@ -61,12 +73,18 @@ void generate_data(const int size, const int dim) {
 	out.close();
 }
 
+/**
+* Compute the distance square
+*/
 double distance2(double x1, double y1, double x2, double y2) {
 	double dx = x1 - x2;
 	double dy = y1 - y2;
 	return dx * dx + dy * dy;
 }
 
+/**
+* Naive way to get the points in a qiven raduis^2
+*/
 void naive(const point points, const int q, double r2) {
 	std::vector<int> result;
 	for(size_t i = 0; i < points.size()/2; ++i) if(distance2(points[x(q)], points[y(q)], points[x(i)], points[y(i)]) <= r2) result.push_back(i);
@@ -92,34 +110,17 @@ void test_frs() {
 
 int main() {
 
-	 //generate_clusstered_points(20, 2);
-
-	 std::string file_name = "./dataset/twitter_1000000.txt";
+	 std::string twitter = "./dataset/twitter_1000000.txt";
+	 const int num_pts = 100;
+	 int clusster_number = 3;
+	 generate_clusstered_points(num_pts, 2);
+	 std::string file_name = twitter;
 	 clock_t begin = clock();
-	 KCO k(file_name, 3, 1);
+	 KCO k(file_name, clusster_number, 1);
 	 k.run();
 	 clock_t end = clock();
 	 double elapsed = double(end - begin) / CLOCKS_PER_SEC;
 	 std::cout << "pre time " << elapsed << '\n';
 
-	 //k.print_clusters();
-
-	// begin = clock();
-	// for(int i = 0; i < points.size()/2 ; ++i) {
-	// 	naive(points, i,  4 * 4);
-	// }
-	// end = clock();
-	// elapsed = double(end - begin) / CLOCKS_PER_SEC;
-	// std::cout << "time " << elapsed << '\n';
-	//
-	// std::sort(g_res.begin(), g_res.end());
-	//
-	// for(size_t i = 0; i < g_res.size(); ++i) {
-	// 	std::cout << g_res[i] << ' ';
-	// } std::cout << '\n';
-	//
-	// for(size_t i = 0; i < n_res.size(); ++i) {
-	// 	std::cout << n_res[i] << ' ';
-	// } std::cout << '\n';
-	return 0;
+	 return 0;
 }

@@ -5,6 +5,13 @@
 #define x(i) 2 * i
 #define y(i) 2 * i + 1
 
+grid::grid(const std::string file_name, const double r, int nb_pts) : radius(r), radius_2(r * r) {
+  number_points = nb_pts;
+  given = true;
+  read_points(file_name);
+  build();
+}
+
 grid::grid(const std::string file_name, const double r) : radius(r), radius_2(r * r) {
   read_points(file_name);
   build();
@@ -39,16 +46,12 @@ void grid::reset(const double r) {
 void grid::read_points(const std::string file_name) {
 	std::ifstream in(file_name);
   dimension = 2;
-  //int n; int m;
-	//in >> n; in >> m;
-  number_points = 1000000;
+  if(!given) number_points = 1000000;
   points = point(number_points * dimension);
   int time;
 	for(int i = 0; i < dimension * number_points; ++i) {
-  //  in >> time;
-    if(i % 2 == 0) in >> time;
+    if(i % 2 == 0 && !given) in >> time;
     in >> points[i];
-
     if(i % 2 == 0) {
 			min_x = std::min(min_x, points[i]);
 			max_x = std::max(max_x, points[i]);

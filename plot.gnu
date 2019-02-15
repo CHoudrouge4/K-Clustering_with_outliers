@@ -11,7 +11,7 @@ reset
 set terminal wxt size 500,500 enhanced font 'Verdana,10' persist
 # png
 #set terminal pngcairo size 350,262 enhanced font 'Verdana,10'
-set output 'data1.jpg'
+set output 'data1.png'
 
 # color definitions
 set border linewidth 1.5
@@ -31,3 +31,4 @@ set xrange [-20:20]
 set yrange [-20:20]
 
 plot('c1.txt') with points palette
+#plot('clusstered_data.txt')
